@@ -10,15 +10,20 @@ import {
 
 export interface IItem {
   title: string;
+  id: number;
   description: string;
+  status: 'To do' | 'On doing' | 'Done';
 }
 
 interface Props {
   setBlocNotes: React.Dispatch<React.SetStateAction<IItem[]>>;
   blocNotes: IItem[];
+  item?: IItem;
+  type?: "edit" | "add";
 }
 
-const AddItem: React.FC<Props> = ({blocNotes, setBlocNotes}) => {
+const AddItem: React.FC<Props> = ({blocNotes, setBlocNotes, item, type="add"}) => {
+  console.log(blocNotes, item)
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const addItem = () => {
@@ -30,6 +35,8 @@ const AddItem: React.FC<Props> = ({blocNotes, setBlocNotes}) => {
         {
           title,
           description: description || '1',
+          status: 'To do',
+          id: 1
         },
       ]);
       setTitle('');
@@ -38,17 +45,17 @@ const AddItem: React.FC<Props> = ({blocNotes, setBlocNotes}) => {
   };
   return (
     <View>
-      <Text style={styles.heading}>Add Notes Item</Text>
+      <Text style={styles.heading}>{type.toLocaleUpperCase()} Notes Item</Text>
       <View style={styles.form}>
         <TextInput
           style={styles.input}
-          placeholder="Enter title"
+          placeholder={type === "add" ? "Enter title": item?.title}
           value={title}
           onChangeText={text => setTitle(text)}
         />
         <TextInput
           style={styles.input}
-          placeholder="Enter description"
+          placeholder={type === "add" ? "Enter description": item?.description}
           keyboardType="numeric"
           value={description}
           onChangeText={q => {
@@ -66,6 +73,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 20,
     fontWeight: '700',
+    color: "#54A487"
   },
   form: {
     marginTop: 30,
@@ -76,9 +84,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)'
   },
   addItemButton: {
-    backgroundColor: '#eb8634',
+    backgroundColor: '#54A487',
     paddingVertical: 20,
     borderRadius: 5,
     alignItems: 'center',
